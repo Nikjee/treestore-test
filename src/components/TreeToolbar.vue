@@ -13,6 +13,9 @@ type Emits = {
   add: [label:string]
   update: [patch: { label: string; parent: ItemId | null }]
   remove: []
+  GetAllParents: []
+  GetAllChildren: []
+  Reload: []
 }
 
 const ROOT_PARENT = ''
@@ -105,6 +108,27 @@ const updateEntity = () => {
       >
         Удалить
       </button>
+      <button
+        type="button"
+        :disabled="!canEdit"
+        @click="emit('GetAllChildren')"
+      >
+        GetAllChildren
+      </button>
+      <button
+        type="button"
+        :disabled="!canEdit"
+        @click="emit('GetAllParents')"
+      >
+        GetAllParents
+      </button>
+      <button
+        type="button"
+        :disabled="disabled"
+        @click="emit('Reload')"
+      >
+        Reload data
+      </button>
     </div>
     <div class="toolbar-fields">
       <label class="field">
@@ -112,7 +136,7 @@ const updateEntity = () => {
         <input
           v-model="label"
           type="text"
-          :disabled="!canEdit"
+          :disabled="disabled"
         >
       </label>
       <label class="field">

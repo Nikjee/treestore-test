@@ -10,6 +10,7 @@ const { store, items, setItems, addItem, removeItem, updateItem } = useTreeStore
 const isLoading = ref(true)
 
 const selected = ref<TreeItem | null>(null)
+const debugHint = ref<string | null>(null)
 
 const selectedTreeItem = computed(() => {
   void items.value
@@ -49,6 +50,29 @@ const updateEntity = (patch: { label: string; parent: ItemId | null }) => {
   })
 }
 
+const getAllChildren = () => {
+  if (!selectedTreeItem.value) return
+  console.log('getAllChildren', store.getAllChildren(selectedTreeItem.value.id))
+  debugHint.value = `All children of ${selectedTreeItem.value.label}: [ ${store.getAllChildren(selectedTreeItem.value.id).map((item) => item.label).join(', ')} ]`
+}
+
+const getAllParents = () => {
+  if (!selectedTreeItem.value) return
+  console.log('getAllParents', store.getAllParents(selectedTreeItem.value.id))
+  debugHint.value = `All parents of ${selectedTreeItem.value.label}: [ ${store.getAllParents(selectedTreeItem.value.id).map((item) => item.label).join(', ')} ]`
+}
+
+const reloadData = async () => {
+  setItems([])
+
+  isLoading.value = true
+
+  const data = await loadData()
+  setItems(data)
+
+  isLoading.value = false
+}
+
 onMounted(async () => {
   const data = await loadData()
   setItems(data)
@@ -66,7 +90,22 @@ onMounted(async () => {
       @add="addEntity"
       @update="updateEntity"
       @remove="removeEntity"
+      @get-all-children="getAllChildren"
+      @get-all-parents="getAllParents"
+      @reload="reloadData"
     />
+    <div
+      v-if="debugHint"
+      class="debug-info"
+    >
+      <pre>{{ debugHint }}</pre>
+      <button
+        type="button"
+        @click="debugHint = null"
+      >
+        X
+      </button>
+    </div>
     <div class="table-wrap">
       <TreeTable
         :store="store"
@@ -93,5 +132,22 @@ onMounted(async () => {
   position: relative;
   flex: 1;
   min-height: 0;
+}
+
+.debug-info {
+  display: flex;
+  align-self: flex-start;
+  align-items: center;
+  gap: 12px;
+  max-width: 100%;
+  padding: 0 6px;
+  background: #f0f0f0;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  font-size: 14px;
+
+  & button {
+    cursor: pointer;
+  }
 }
 </style>
