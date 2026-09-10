@@ -18,6 +18,7 @@
   "dependencies": {
     "ag-grid-enterprise": "^36.1.0",
     "ag-grid-vue3": "^36.1.0",
+    "sass-embedded": "^1.104.0",
     "vue": "^3.5.40"
   },
   "devDependencies": {
