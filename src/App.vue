@@ -21,7 +21,6 @@ const createId = () => crypto.randomUUID().slice(0, 8)
 
 const onSelect = (item: TreeItem | null) => {
   selected.value = item
-  console.log('onSelect', item)
 }
 
 const addEntity = (label: string) => {

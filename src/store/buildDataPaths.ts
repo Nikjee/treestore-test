@@ -18,7 +18,6 @@ export const buildDataPaths = (store: TreeStore): Map<ItemId, string[]> => {
     paths.set(item.id, itemsToRoot.reverse())
   }
 
-  console.log('tree paths', paths)
   return paths
 }
 
