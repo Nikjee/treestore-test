@@ -94,7 +94,13 @@ export class TreeStore {
     const existing = this.itemsById.get(item.id);
     if (!existing) return;
 
+    const previousParent = existing.parent;
     Object.assign(existing, item);
+
+    if (existing.parent !== previousParent) {
+      this.removeFromParent({ ...existing, parent: previousParent })
+      this.appendToParent(existing)
+    }
 
   }
 
@@ -103,6 +109,14 @@ export class TreeStore {
     if (!children) return;
 
     const index = children.indexOf(child);
+
+    // If tree item parent is changed find its index by id.
+    if (index === -1) {
+      const fallbackIndex = children.findIndex((item) => item.id === child.id)
+      if (fallbackIndex !== -1) children.splice(fallbackIndex, 1)
+      return
+    }
+
     children.splice(index, 1);
   }
 
