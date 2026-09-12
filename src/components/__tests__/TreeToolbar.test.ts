@@ -54,7 +54,7 @@ describe('TreeToolbar', () => {
     expect(values).toEqual(['Корневой элемент']);
   });
 
-  it('emits add, update and remove from the toolbar actions', async () => {
+  it('emits toolbar actions', async () => {
     const selected = testData[2];
     if (!selected) throw new Error('expected items[2]');
     const wrapper = mountToolbar(selected);
@@ -64,9 +64,15 @@ describe('TreeToolbar', () => {
     await wrapper.get('[data-test="edit-parent"]').setValue('n:2');
     await wrapper.get('[data-test="update-item"]').trigger('click');
     await wrapper.get('[data-test="remove-item"]').trigger('click');
+    await wrapper.get('[data-test="get-all-children"]').trigger('click');
+    await wrapper.get('[data-test="get-all-parents"]').trigger('click');
+    await wrapper.get('[data-test="reload-data"]').trigger('click');
 
     expect(wrapper.emitted('add')).toHaveLength(1);
     expect(wrapper.emitted('update')?.[0]).toEqual([{ label: 'New name', parent: 2 }]);
     expect(wrapper.emitted('remove')).toHaveLength(1);
+    expect(wrapper.emitted('GetAllChildren')).toHaveLength(1);
+    expect(wrapper.emitted('GetAllParents')).toHaveLength(1);
+    expect(wrapper.emitted('Reload')).toHaveLength(1);
   });
 });

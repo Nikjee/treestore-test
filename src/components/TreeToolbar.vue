@@ -113,6 +113,7 @@ const updateEntity = () => {
       </button>
       <button
         type="button"
+        data-test="get-all-children"
         :disabled="!canEdit"
         @click="emit('GetAllChildren')"
       >
@@ -120,6 +121,7 @@ const updateEntity = () => {
       </button>
       <button
         type="button"
+        data-test="get-all-parents"
         :disabled="!canEdit"
         @click="emit('GetAllParents')"
       >
@@ -127,6 +129,7 @@ const updateEntity = () => {
       </button>
       <button
         type="button"
+        data-test="reload-data"
         :disabled="disabled"
         @click="emit('Reload')"
       >
