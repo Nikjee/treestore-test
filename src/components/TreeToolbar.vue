@@ -89,6 +89,7 @@ const updateEntity = () => {
     <div class="toolbar-actions">
       <button
         type="button"
+        data-test="add-item"
         :disabled="disabled"
         @click="emit('add', label)"
       >
@@ -96,6 +97,7 @@ const updateEntity = () => {
       </button>
       <button
         type="button"
+        data-test="update-item"
         :disabled="!canEdit"
         @click="updateEntity"
       >
@@ -103,6 +105,7 @@ const updateEntity = () => {
       </button>
       <button
         type="button"
+        data-test="remove-item"
         :disabled="!canEdit"
         @click="emit('remove')"
       >
@@ -136,6 +139,7 @@ const updateEntity = () => {
         <input
           v-model="label"
           type="text"
+          data-test="edit-label"
           :disabled="disabled"
         >
       </label>
@@ -144,6 +148,7 @@ const updateEntity = () => {
         <select
           v-model="parent"
           :disabled="!canEdit"
+          data-test="edit-parent"
         >
           <option :value="ROOT_PARENT">Корневой элемент</option>
           <option
