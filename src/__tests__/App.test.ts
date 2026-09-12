@@ -18,7 +18,7 @@ vi.mock('@/components/TreeTable.vue', () => ({
       isLoading: { type: Boolean, required: true },
     },
     emits: ['select'],
-    template: `<div class="table-mock">{{ isLoading ? 'loading' : 'ready' }}:{{ rowData.length }}</div>`,
+    template: '<div class="table-mock">{{ isLoading ? \'loading\' : \'ready\' }}:{{ rowData.length }}</div>',
   }),
 }));
 
@@ -32,7 +32,7 @@ describe('App', () => {
   });
 
   it('Keep tree store empty and shows loading until fetch resolves with items', async () => {
-    let resolveItems: (value: TreeItem[]) => void = () => {};
+    let resolveItems: (value: TreeItem[]) => void = () => { };
 
     loadItems.mockReturnValue(
       new Promise<TreeItem[]>((resolve) => {
