@@ -1,7 +1,7 @@
 import { TreeStore, type ItemId, type TreeItem } from "@/store/TreeStore";
 import { computed, ref } from "vue";
 
-export const useTreeStore = (initialData: TreeItem[]) => {
+export const useTreeStore = (initialData: TreeItem[] = []) => {
   const store = new TreeStore(initialData);
   const updateCnt = ref(0);
 
