@@ -84,6 +84,48 @@ describe('App', () => {
     expect(store.getChildren(1)).toHaveLength(1);
   });
 
+  it('removes the selected item and its children', async () => {
+    const root: TreeItem = { id: 1, parent: null, label: 'Item 1' };
+    const child: TreeItem = { id: 2, parent: 1, label: 'Item 2' };
+    loadItems.mockResolvedValue([root, child]);
+
+    const { default: App } = await import('../App.vue');
+    const wrapper = mount(App);
+    await flushPromises();
+
+    wrapper.findComponent({ name: 'TreeTable' }).vm.$emit('select', root);
+    await wrapper.vm.$nextTick();
+    await wrapper.get('[data-test="remove-item"]').trigger('click');
+
+    const store = wrapper.findComponent({ name: 'TreeTable' }).props('store') as TreeStore;
+    expect(store.getAll()).toEqual([]);
+  });
+
+  it('clears existing items and shows loading while reloading data', async () => {
+    let resolveReload: (value: TreeItem[]) => void = () => { };
+    loadItems
+      .mockResolvedValueOnce([{ id: 1, parent: null, label: 'Old item' }])
+      .mockReturnValueOnce(
+        new Promise<TreeItem[]>((resolve) => {
+          resolveReload = resolve;
+        }),
+      );
+
+    const { default: App } = await import('../App.vue');
+    const wrapper = mount(App);
+    await flushPromises();
+
+    await wrapper.get('[data-test="reload-data"]').trigger('click');
+    expect(wrapper.text()).toContain('loading:0');
+
+    resolveReload([{ id: 2, parent: null, label: 'New item' }]);
+    await flushPromises();
+
+    expect(wrapper.text()).toContain('ready:1');
+    const store = wrapper.findComponent({ name: 'TreeTable' }).props('store') as TreeStore;
+    expect(store.getAll()).toEqual([{ id: 2, parent: null, label: 'New item' }]);
+  });
+
   it('updates the selected item label and parent', async () => {
     const items: TreeItem[] = [
       { id: 1, parent: null, label: 'Item 1' },
