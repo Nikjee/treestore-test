@@ -34,6 +34,8 @@ export class TreeStore {
   }
 
   addItem(item: TreeItem): void {
+    if (this.getItem(item.id)) throw new Error(`Item with id ${item.id} already exists`);
+
     this.items.push(item);
     this.indexItem(item);
   }
@@ -95,11 +97,28 @@ export class TreeStore {
     if (!existing) return;
 
     const previousParent = existing.parent;
+
+    if (item.parent !== previousParent) {
+      this.checkIfParentIsValidForUpdate(item);
+    }
+
     Object.assign(existing, item);
 
     if (existing.parent !== previousParent) {
       this.removeFromParent({ ...existing, parent: previousParent });
       this.appendToParent(existing);
+    }
+  }
+
+  private checkIfParentIsValidForUpdate(item: TreeItem): void {
+    const invalidParent =
+      item.parent === item.id ||
+      this.getAllChildren(item.id).some(
+        (child) => child.id === item.parent,
+      );
+
+    if (invalidParent) {
+      throw new Error(`Item ${item.id} cannot be moved under its child`);
     }
   }
 
