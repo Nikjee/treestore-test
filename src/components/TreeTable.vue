@@ -17,6 +17,7 @@ import {
 import { TreeDataModule } from 'ag-grid-enterprise'
 import type { TreeItem, TreeStore } from '@/store/TreeStore'
 import { buildDataPaths, getRowCategory } from '@/store/buildDataPaths'
+import { encodeItemId } from '@/store/encodeItemsIds'
 
 type Props = {
   store: TreeStore;
@@ -44,7 +45,7 @@ const rows = computed<GridRow[]>(() => {
   const pathMap = buildDataPaths(props.store)
   return props.rowData.map((item) => ({
     ...item,
-    path: pathMap.get(item.id) ?? [String(item.id)],
+    path: pathMap.get(item.id) ?? [encodeItemId(item.id)],
   }))
 })
 
@@ -104,7 +105,7 @@ const groupDefaultExpanded = ref(-1)
 
 const getDataPath: GetDataPath<GridRow> = (data) => data.path
 
-const getRowId = (params: GetRowIdParams<GridRow>) => String(params.data.id)
+const getRowId = (params: GetRowIdParams<GridRow>) => encodeItemId(params.data.id)
 
 const onSelectionChanged = (event: SelectionChangedEvent<GridRow>) => {
   if (event.source === 'rowDataChanged') return

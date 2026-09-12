@@ -1,4 +1,5 @@
 import type { ItemId, TreeItem, TreeStore } from '@/store/TreeStore'
+import { encodeItemId } from '@/store/encodeItemsIds'
 
 export const buildDataPaths = (store: TreeStore): Map<ItemId, string[]> => {
   const paths = new Map<ItemId, string[]>();
@@ -10,7 +11,7 @@ export const buildDataPaths = (store: TreeStore): Map<ItemId, string[]> => {
     let current: TreeItem | undefined = item;
 
     while (current) {
-      itemsToRoot.push(String(current.id));
+      itemsToRoot.push(encodeItemId(current.id));
       if (current.parent === null || current.parent === undefined) break;
       current = store.getItem(current.parent);
     }

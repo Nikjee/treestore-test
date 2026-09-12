@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import type { ItemId, TreeItem, TreeStore } from '@/store/TreeStore'
+import { decodeItemId, encodeItemId } from '@/store/encodeItemsIds'
 
 type Props = {
   store: TreeStore
@@ -28,13 +29,12 @@ const parent = ref(ROOT_PARENT)
 
 const encodeParent = (id: ItemId | null): string => {
   if (id === null) return ROOT_PARENT;
-  return typeof id === 'number' ? `n:${id}` : `s:${id}`
+  return encodeItemId(id);
 }
 
 const decodeParent = (value: string): ItemId | null => {
   if (value === ROOT_PARENT) return null
-  if (value.startsWith('n:')) return Number(value.slice(2))
-  return value.slice(2)
+  return decodeItemId(value);
 }
 
 const parentOptions = computed(() => {
