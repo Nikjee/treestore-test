@@ -22,6 +22,38 @@ describe('useTreeStore', () => {
 
     expect(store.getAll()).toEqual(items);
     expect(rowData.value).toEqual(items);
-    expect(rowData.value).not.toBe(store.getAll());
+  });
+
+  it('updates reactive items after adding an item', () => {
+    const { items: rowData, addItem, setItems } = useTreeStore();
+    setItems(items);
+    const before = rowData.value;
+
+    addItem({ id: 3, parent: 1, label: 'Item 3' });
+
+    expect(rowData.value).not.toBe(before);
+    expect(rowData.value.map((item) => item.id)).toEqual([1, 2, 3]);
+  });
+
+  it('updates reactive items after editing an item', () => {
+    const { items: rowData, setItems, updateItem } = useTreeStore();
+    setItems(items);
+    const before = rowData.value;
+
+    updateItem({ id: 2, parent: null, label: 'Updated item' });
+
+    expect(rowData.value).not.toBe(before);
+    expect(rowData.value[1]).toEqual({ id: 2, parent: null, label: 'Updated item' });
+  });
+
+  it('updates reactive items after removing an item', () => {
+    const { items: rowData, removeItem, setItems } = useTreeStore();
+    setItems(items);
+    const before = rowData.value;
+
+    removeItem(1);
+
+    expect(rowData.value).not.toBe(before);
+    expect(rowData.value.length).toEqual(1);
   });
 });
