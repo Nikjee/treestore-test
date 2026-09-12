@@ -116,6 +116,7 @@ const onSelectionChanged = (event: SelectionChangedEvent<GridRow>) => {
 <template>
   <div style="height: 100%">
     <ag-grid-vue
+      class="ag-grid-table"
       style="width: 100%; height: 100%"
       :column-defs="columnDefs"
       :default-col-def="defaultColDef"
