@@ -71,4 +71,48 @@ describe('TreeTable', () => {
     expect(getRowId({ data: numeric })).toBe('n:8');
     expect(getRowId({ data: stringRow })).toBe('s:8');
   });
+
+  it('emits the selected row when grid selection changes', async () => {
+    const store = new TreeStore(items);
+    const wrapper = mount(TreeTable, {
+      props: {
+        store,
+        rowData: items,
+        isLoading: false,
+      },
+    });
+    const selected = items[1];
+    if (!selected) throw new Error('expected second item');
+
+    wrapper.findComponent({ name: 'AgGridVue' }).vm.$emit('selection-changed', {
+      source: 'checkboxSelected',
+      api: {
+        getSelectedRows: () => [selected],
+      },
+    });
+    await wrapper.vm.$nextTick();
+
+    expect(wrapper.emitted('select')).toEqual([[selected]]);
+  });
+
+  it('does not emit selection while row data is being replaced', async () => {
+    const store = new TreeStore(items);
+    const wrapper = mount(TreeTable, {
+      props: {
+        store,
+        rowData: items,
+        isLoading: false,
+      },
+    });
+
+    wrapper.findComponent({ name: 'AgGridVue' }).vm.$emit('selection-changed', {
+      source: 'rowDataChanged',
+      api: {
+        getSelectedRows: () => [items[0]],
+      },
+    });
+    await wrapper.vm.$nextTick();
+
+    expect(wrapper.emitted('select')).toBeUndefined();
+  });
 });
