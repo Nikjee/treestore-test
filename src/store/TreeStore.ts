@@ -12,7 +12,7 @@ export class TreeStore {
   private readonly itemsById = new Map<ItemId, TreeItem>();
   private readonly childrenByParent = new Map<ItemId | null, TreeItem[]>();
 
-  constructor(items: TreeItem[]) {
+  constructor(items: TreeItem[] = []) {
     this.setItems(items);
   }
 
