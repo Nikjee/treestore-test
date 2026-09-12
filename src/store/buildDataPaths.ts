@@ -1,5 +1,5 @@
-import type { ItemId, TreeItem, TreeStore } from '@/store/TreeStore'
-import { encodeItemId } from '@/store/encodeItemsIds'
+import type { ItemId, TreeItem, TreeStore } from '@/store/TreeStore';
+import { encodeItemId } from '@/store/encodeItemsIds';
 
 export const buildDataPaths = (store: TreeStore): Map<ItemId, string[]> => {
   const paths = new Map<ItemId, string[]>();
@@ -16,12 +16,12 @@ export const buildDataPaths = (store: TreeStore): Map<ItemId, string[]> => {
       current = store.getItem(current.parent);
     }
 
-    paths.set(item.id, itemsToRoot.reverse())
+    paths.set(item.id, itemsToRoot.reverse());
   }
 
-  return paths
-}
+  return paths;
+};
 
 export const getRowCategory = (store: TreeStore, item: TreeItem) => {
   return store.getChildren(item.id).length > 0 ? 'Группа' : 'Элемент';
-}
+};

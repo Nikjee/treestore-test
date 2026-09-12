@@ -1,83 +1,89 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
-import { loadData } from './api/loadData'
-import TreeTable from './components/TreeTable.vue'
-import { useTreeStore } from './composables/useTreeStore.ts'
-import type { ItemId, TreeItem } from './store/TreeStore.ts'
-import TreeToolbar from './components/TreeToolbar.vue'
+import { computed, onMounted, ref } from 'vue';
+import { loadData } from './api/loadData';
+import TreeTable from './components/TreeTable.vue';
+import { useTreeStore } from './composables/useTreeStore.ts';
+import type { ItemId, TreeItem } from './store/TreeStore.ts';
+import TreeToolbar from './components/TreeToolbar.vue';
 
-const { store, items, setItems, addItem, removeItem, updateItem } = useTreeStore([])
-const isLoading = ref(true)
+const { store, items, setItems, addItem, removeItem, updateItem } = useTreeStore([]);
+const isLoading = ref(true);
 
-const selected = ref<TreeItem | null>(null)
-const debugHint = ref<string | null>(null)
+const selected = ref<TreeItem | null>(null);
+const debugHint = ref<string | null>(null);
 
 const selectedTreeItem = computed(() => {
-  void items.value
-  if (!selected.value) return null
-  return store.getItem(selected.value.id) ?? null
-})
+  void items.value;
+  if (!selected.value) return null;
+  return store.getItem(selected.value.id) ?? null;
+});
 
-const createId = () => crypto.randomUUID().slice(0, 8)
+const createId = () => crypto.randomUUID().slice(0, 8);
 
 const onSelect = (item: TreeItem | null) => {
-  selected.value = item
-}
+  selected.value = item;
+};
 
 const addEntity = (label: string) => {
-  const parent = selectedTreeItem.value?.id ?? null
+  const parent = selectedTreeItem.value?.id ?? null;
   addItem({
     id: createId(),
     parent,
     label,
-  })
-}
+  });
+};
 
 const removeEntity = () => {
-  if (!selectedTreeItem.value) return
-  removeItem(selectedTreeItem.value.id)
-  selected.value = null
-}
+  if (!selectedTreeItem.value) return;
+  removeItem(selectedTreeItem.value.id);
+  selected.value = null;
+};
 
 const updateEntity = (patch: { label: string; parent: ItemId | null }) => {
-  const current = selectedTreeItem.value
-  if (!current) return
+  const current = selectedTreeItem.value;
+  if (!current) return;
 
   updateItem({
     id: current.id,
     parent: patch.parent,
     label: patch.label.trim() || String(current.id),
-  })
-}
+  });
+};
 
 const getAllChildren = () => {
-  if (!selectedTreeItem.value) return
-  console.log('getAllChildren', store.getAllChildren(selectedTreeItem.value.id))
-  debugHint.value = `All children of ${selectedTreeItem.value.label}: [ ${store.getAllChildren(selectedTreeItem.value.id).map((item) => item.label).join(', ')} ]`
-}
+  if (!selectedTreeItem.value) return;
+  console.log('getAllChildren', store.getAllChildren(selectedTreeItem.value.id));
+  debugHint.value = `All children of ${selectedTreeItem.value.label}: [ ${store
+    .getAllChildren(selectedTreeItem.value.id)
+    .map((item) => item.label)
+    .join(', ')} ]`;
+};
 
 const getAllParents = () => {
-  if (!selectedTreeItem.value) return
-  console.log('getAllParents', store.getAllParents(selectedTreeItem.value.id))
-  debugHint.value = `All parents of ${selectedTreeItem.value.label}: [ ${store.getAllParents(selectedTreeItem.value.id).map((item) => item.label).join(', ')} ]`
-}
+  if (!selectedTreeItem.value) return;
+  console.log('getAllParents', store.getAllParents(selectedTreeItem.value.id));
+  debugHint.value = `All parents of ${selectedTreeItem.value.label}: [ ${store
+    .getAllParents(selectedTreeItem.value.id)
+    .map((item) => item.label)
+    .join(', ')} ]`;
+};
 
 const reloadData = async () => {
-  setItems([])
+  setItems([]);
 
-  isLoading.value = true
+  isLoading.value = true;
 
-  const data = await loadData()
-  setItems(data)
+  const data = await loadData();
+  setItems(data);
 
-  isLoading.value = false
-}
+  isLoading.value = false;
+};
 
 onMounted(async () => {
-  const data = await loadData()
-  setItems(data)
-  isLoading.value = false
-})
+  const data = await loadData();
+  setItems(data);
+  isLoading.value = false;
+});
 </script>
 
 <template>

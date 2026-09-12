@@ -1,46 +1,46 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
-import type { ItemId, TreeItem, TreeStore } from '@/store/TreeStore'
-import { decodeItemId, encodeItemId } from '@/store/encodeItemsIds'
+import { computed, ref, watch } from 'vue';
+import type { ItemId, TreeItem, TreeStore } from '@/store/TreeStore';
+import { decodeItemId, encodeItemId } from '@/store/encodeItemsIds';
 
 type Props = {
-  store: TreeStore
-  items: TreeItem[]
-  selected: TreeItem | null
-  disabled?: boolean
-}
+  store: TreeStore;
+  items: TreeItem[];
+  selected: TreeItem | null;
+  disabled?: boolean;
+};
 
 type Emits = {
-  add: [label:string]
-  update: [patch: { label: string; parent: ItemId | null }]
-  remove: []
-  GetAllParents: []
-  GetAllChildren: []
-  Reload: []
-}
+  add: [label: string];
+  update: [patch: { label: string; parent: ItemId | null }];
+  remove: [];
+  GetAllParents: [];
+  GetAllChildren: [];
+  Reload: [];
+};
 
-const ROOT_PARENT = ''
+const ROOT_PARENT = '';
 
-const props = defineProps<Props>()
-const emit = defineEmits<Emits>()
+const props = defineProps<Props>();
+const emit = defineEmits<Emits>();
 
-const label = ref('')
-const parent = ref(ROOT_PARENT)
+const label = ref('');
+const parent = ref(ROOT_PARENT);
 
 const encodeParent = (id: ItemId | null): string => {
   if (id === null) return ROOT_PARENT;
   return encodeItemId(id);
-}
+};
 
 const decodeParent = (value: string): ItemId | null => {
-  if (value === ROOT_PARENT) return null
+  if (value === ROOT_PARENT) return null;
   return decodeItemId(value);
-}
+};
 
 const parentOptions = computed(() => {
-  void props.items
-  const current = props.selected
-  const blocked = new Set<ItemId>()
+  void props.items;
+  const current = props.selected;
+  const blocked = new Set<ItemId>();
   if (current) {
     blocked.add(current.id);
     for (const child of props.store.getAllChildren(current.id)) {
@@ -55,9 +55,9 @@ const parentOptions = computed(() => {
       value: encodeParent(item.id),
       label: String(item.label ?? item.id),
     }));
-})
+});
 
-const canEdit = computed(() => !props.disabled && Boolean(props.selected))
+const canEdit = computed(() => !props.disabled && Boolean(props.selected));
 
 watch(
   () => props.selected,
@@ -65,23 +65,23 @@ watch(
     if (!item) {
       label.value = '';
       parent.value = ROOT_PARENT;
-      return
+      return;
     }
 
     label.value = String(item.label ?? '');
     parent.value = encodeParent(item.parent);
   },
   { immediate: true },
-)
+);
 
 const updateEntity = () => {
-  if (!props.selected) return
+  if (!props.selected) return;
 
   emit('update', {
     label: label.value,
     parent: decodeParent(parent.value),
   });
-}
+};
 </script>
 
 <template>

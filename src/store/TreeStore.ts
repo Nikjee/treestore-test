@@ -1,4 +1,4 @@
-export type ItemId = string | number
+export type ItemId = string | number;
 
 export interface TreeItem {
   id: ItemId;
@@ -80,8 +80,8 @@ export class TreeStore {
 
     const toRemove = [item, ...this.getAllChildren(id)];
 
-    const removableIds = new Set<ItemId>(toRemove.map(i => i.id));
-    this.items = this.items.filter(i => !removableIds.has(i.id));
+    const removableIds = new Set<ItemId>(toRemove.map((i) => i.id));
+    this.items = this.items.filter((i) => !removableIds.has(i.id));
 
     for (const item of toRemove) {
       this.itemsById.delete(item.id);
@@ -98,10 +98,9 @@ export class TreeStore {
     Object.assign(existing, item);
 
     if (existing.parent !== previousParent) {
-      this.removeFromParent({ ...existing, parent: previousParent })
-      this.appendToParent(existing)
+      this.removeFromParent({ ...existing, parent: previousParent });
+      this.appendToParent(existing);
     }
-
   }
 
   private removeFromParent(child: TreeItem): void {
@@ -112,9 +111,9 @@ export class TreeStore {
 
     // If tree item parent is changed find its index by id.
     if (index === -1) {
-      const fallbackIndex = children.findIndex((item) => item.id === child.id)
-      if (fallbackIndex !== -1) children.splice(fallbackIndex, 1)
-      return
+      const fallbackIndex = children.findIndex((item) => item.id === child.id);
+      if (fallbackIndex !== -1) children.splice(fallbackIndex, 1);
+      return;
     }
 
     children.splice(index, 1);
@@ -143,5 +142,4 @@ export class TreeStore {
       this.indexItem(item);
     }
   }
-
 }

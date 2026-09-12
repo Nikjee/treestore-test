@@ -1,4 +1,4 @@
-import type { TreeItem, ItemId } from "../../TreeStore";
+import type { TreeItem, ItemId } from '../../TreeStore';
 
 export interface TreeGenOptions {
   levels: number;
@@ -6,7 +6,7 @@ export interface TreeGenOptions {
 }
 
 export const generateTreeData = ({ levels, childrenPerNode }: TreeGenOptions): TreeItem[] => {
-  const items: TreeItem[] = [{ id: 1, parent: null, label: "root" }];
+  const items: TreeItem[] = [{ id: 1, parent: null, label: 'root' }];
   let nextId = 2;
 
   const buildLevel = (parents: ItemId[], levels: number): void => {
@@ -21,32 +21,32 @@ export const generateTreeData = ({ levels, childrenPerNode }: TreeGenOptions): T
       }
     }
     buildLevel(nextParents, levels - 1);
-  }
+  };
 
   buildLevel([1], levels);
   return items;
-}
+};
 
 export const generateChainTree = (length: number): TreeItem[] => {
-  const items: TreeItem[] = [{ id: 1, parent: null, label: "root" }];
+  const items: TreeItem[] = [{ id: 1, parent: null, label: 'root' }];
   for (let i = 2; i <= length; i++) {
-    items.push({ id: i, parent: i - 1, label: `node-${i}` })
+    items.push({ id: i, parent: i - 1, label: `node-${i}` });
   }
-  return items
-}
+  return items;
+};
 
 export const generateWideTree = (childCount: number): TreeItem[] => {
-  const items: TreeItem[] = [{ id: 1, parent: null, label: "root" }];
+  const items: TreeItem[] = [{ id: 1, parent: null, label: 'root' }];
   for (let i = 2; i <= childCount + 1; i++) {
     items.push({ id: i, parent: 1, label: `node-${i}` });
   }
   return items;
-}
+};
 
 export const getDeepestId = (items: TreeItem[]): ItemId => {
   return items[items.length - 1]?.id ?? 0;
-}
+};
 
 export const getMiddleId = (items: TreeItem[]): ItemId => {
   return items[Math.floor(items.length / 2)]?.id ?? 0;
-}
+};
