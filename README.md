@@ -23,6 +23,11 @@ npm run build
 ```sh
 npm run test:unit
 ```
+### Run Benchmark Tests with [Vitest](https://vitest.dev/)
+
+```sh
+npm run test:bench
+```
 
 ### Lint with [ESLint](https://eslint.org/)
 
